@@ -1,0 +1,44 @@
+name: Development workflow
+
+on:
+  push:
+    branches:
+      - develop
+
+env:
+  PROJECT_NAME: CICDGithub
+  PROJECT_FOLDER: CICDGithub
+  ORCH_URL: https://cloud.uipath.com/${{ secrets.UIPATHACCOUNTNAME }}/${{ secrets.UIPATHTENANTNAME }}
+
+jobs:
+  build-deploy-test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Build UiPath Package
+        shell: pwsh
+        run: ${{ github.workspace }}\scripts\UiPathPack.ps1 ${{ github.workspace }}\project.json -destination_folder ${{ github.workspace }}\package
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Artifacts
+          path: |
+            package/*.*
+            scripts/*.ps1
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: Artifacts
+
+      - name: Deploy to DEV Orchestrator
+        shell: pwsh
+        run: ${{ github.workspace }}\scripts\UiPathDeploy.ps1 ${{ github.workspace }}\package ${{ env.ORCH_URL }} ${{ secrets.UIPATHTENANTNAME }} -pat ${{ secrets.UIPATH_PAT }}
+
+      - name: Run UiPath Tests
+        shell: pwsh
+        run: ${{ github.workspace }}\scripts\UiPathRunTest.ps1 ${{ env.ORCH_URL }} ${{ secrets.UIPATHTENANTNAME }} -pat ${{ secrets.UIPATH_PAT }} -testset "TestSet1"

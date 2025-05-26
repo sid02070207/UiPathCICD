@@ -1,0 +1,40 @@
+name: Production workflow
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  PROJECT_NAME: CICDGithub                         
+  PROJECT_FOLDER: CICDGithub
+  ORCH_URL: https://cloud.uipath.com/siddhglesuos/portal_/orchestrator_
+  ORCH_TENANT: DefaultTenant
+  ORCH_ACCOUNT_NAME: siddhglesuos
+  UIPATH_PAT: ${{ secrets.UIPATH_PAT }}
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Build Nuget Package
+        shell: pwsh
+        run: |
+          .\scripts\UiPathPack.ps1 CICDGithub\project.json -destination_folder .\package
+      - name: Upload UiPath Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Artifacts
+          path: |
+            package/*.*
+            scripts/*.ps1
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: Artifacts
+      - name: Publish Package to Orchestrator
+        shell: pwsh
+        run: |
+          .\scripts\UiPathDeploy.ps1 .\package "${{ env.ORCH_URL }}" "${{ env.ORCH_TENANT }}" -account_name "${{ env.ORCH_ACCOUNT_NAME }}" -pat "${{ env.UIPATH_PAT }}"
