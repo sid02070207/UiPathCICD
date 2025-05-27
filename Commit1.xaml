@@ -66,12 +66,13 @@
       <AssemblyReference>System.Runtime.Serialization.Primitives</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Commit1" sap:VirtualizedContainerService.HintSize="887.2,666.04" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Commit1" sap:VirtualizedContainerService.HintSize="1199.6000000000001,661.64" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="416,165.6" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Check commit to GIT&quot;]" />
+    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="416,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Check commit to GIT&quot;]" />
+    <ui:MessageBox Caption="{x:Null}" ChosenButton="{x:Null}" AutoCloseAfter="00:00:00" DisplayName="Message Box" sap:VirtualizedContainerService.HintSize="416,108.8" sap2010:WorkflowViewState.IdRef="MessageBox_1" Text="[&quot;Testing show changes&quot;]" />
   </Sequence>
 </Activity>
